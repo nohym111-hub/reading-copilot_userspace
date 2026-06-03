@@ -85,7 +85,7 @@ flowchart TD
 Reading Copilot_claude/
   ├── CLAUDE.md
   ├── Docs/
-  │   └── service_def_claude_skills_v1.0.md
+  │   └── PRD_v1.0.md
   ├── Books/
   │   └── {책제목}.md
   ├── Ontology/

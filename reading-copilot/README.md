@@ -61,7 +61,7 @@ rc 설치해줘
 
 스킬들은 **절대경로를 하드코딩하지 않습니다.** 모든 경로·옵션은 사용자 Vault의 `CLAUDE.md` 안 `## ⚙ Configuration` 블록 한 곳에서만 관리됩니다. Vault를 옮기고 싶으면 그 블록의 `vault_root` 값만 바꾸면 됩니다.
 
-자세한 설계 의도와 패키지 구조는 [`INSTALL.md`](./INSTALL.md), 서비스 사양은 [`Docs/service_def_claude_skills_v1.0.md`](./Docs/service_def_claude_skills_v1.0.md) 참고.
+자세한 설계 의도와 패키지 구조는 [`INSTALL.md`](./INSTALL.md), 서비스 사양은 [`Docs/PRD_v1.0.md`](./Docs/PRD_v1.0.md) 참고.
 
 ## 라이선스
 
