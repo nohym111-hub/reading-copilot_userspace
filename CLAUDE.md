@@ -15,7 +15,7 @@ ontology_dir: "Ontology/"      # vault_root 기준 상대경로
 skills_root: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/RC_claude"   # 스킬 소스(plugin repo) 메인 작업 경로 — vault_root와 별개. 스킬 편집은 여기서 한다
 skills_dir: "skills/"          # skills_root 기준 상대경로 — 각 스킬은 {skills_root}/{skills_dir}<name>/SKILL.md
 file_access: "obsidian-mcp"    # 또는 "filesystem" — 1순위 파일 접근 방식
-script_path: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/RC_claude/scripts/rc_save.py"   # rc-save v3: OCR JSON → Obsidian 저장 스크립트
+script_path: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/RC_claude/skills/rc-save/rc_save.py"   # rc-save v3: OCR JSON → Obsidian 저장 스크립트
 git_remote: ""                 # rc-git-push 전용. 비워두면 git 푸시 비활성
 ```
 
