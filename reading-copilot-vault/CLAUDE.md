@@ -9,13 +9,13 @@ _모든 Claude 세션에서 자동으로 로드되는 마스터 컨텍스트_
 > Vault 위치를 옮기거나 옵션을 바꿔야 하면 **이 블록만** 수정하세요. 스킬 파일들은 건드릴 필요가 없습니다.
 
 ```yaml
-vault_root: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/Reading Copilot_claude"   # 데이터 Vault (Books/Ontology)
+vault_root: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/Reading Copilot_claude/reading-copilot-vault"   # 데이터 Vault (Books/Ontology)
 books_dir: "Books/"            # vault_root 기준 상대경로
 ontology_dir: "Ontology/"      # vault_root 기준 상대경로
-skills_root: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/RC_claude"   # 스킬 소스(plugin repo) 메인 작업 경로 — vault_root와 별개. 스킬 편집은 여기서 한다
+skills_root: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/Reading Copilot_claude/reading-copilot"   # 스킬 소스 경로
 skills_dir: "skills/"          # skills_root 기준 상대경로 — 각 스킬은 {skills_root}/{skills_dir}<name>/SKILL.md
 file_access: "obsidian-mcp"    # 또는 "filesystem" — 1순위 파일 접근 방식
-script_path: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/RC_claude/skills/rc-save/rc_save.py"   # rc-save v3: OCR JSON → Obsidian 저장 스크립트
+script_path: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/Reading Copilot_claude/reading-copilot/skills/rc-save/rc_save.py"   # rc-save v3: OCR JSON → Obsidian 저장 스크립트
 git_remote: ""                 # rc-git-push 전용. 비워두면 git 푸시 비활성
 ```
 

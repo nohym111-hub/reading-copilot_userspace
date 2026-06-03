@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "reading-copilot-marketplace",
+  "description": "Personal marketplace for Reading Copilot — 에이전틱 독서 파트너 스킬셋",
+  "owner": {
+    "name": "Sojung Noh",
+    "email": "nohym111@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "reading-copilot",
+      "description": "에이전틱 독서 파트너 — 책 등록, 하이라이트 저장, 대화, 온톨로지 분석을 자율 실행하는 7종 스킬셋",
+      "author": {
+        "name": "Sojung Noh",
+        "email": "nohym111@gmail.com"
+      },
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://github.com/<owner>/reading-copilot"
+    }
+  ]
+}

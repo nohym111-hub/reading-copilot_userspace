@@ -1,0 +1,10 @@
+{
+  "name": "reading-copilot",
+  "version": "0.3.0",
+  "description": "에이전틱 독서 파트너 — 책 등록, 하이라이트 저장, 대화, 온톨로지 분석을 자율 실행하는 스킬셋",
+  "author": {
+    "name": "Sojung Noh",
+    "email": "nohym111@gmail.com"
+  },
+  "homepage": "https://github.com/<owner>/reading-copilot"
+}
