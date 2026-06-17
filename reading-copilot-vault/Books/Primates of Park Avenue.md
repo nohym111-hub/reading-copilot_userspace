@@ -1,20 +1,20 @@
 ---
 title: "Primates of Park Avenue"
-author: "Wednesday Martin"
-author_orig: "Wednesday Martin"
-published: 2015
+creator: "Wednesday Martin"
+translator:
+media_type: "book"
+media_subtype: "non-fiction"
+genre: ["memoir", "anthropology", "social commentary"]
+released: 2015
 country: "USA"
 language: "en"
-type: "non-fiction"
-genre: ["memoir", "anthropology", "social commentary"]
-status: "reading"
+status: "explored"
 started: 2026-05-20
 finished:
-highlights_count: 10
 user_rating:
 ai_ontology_nodes: []
 ai_interest_score:
-ai_connected_books: []
+ai_connected: []
 ai_cross_themes: []
 ai_summary:
 ai_last_analyzed:
@@ -69,5 +69,5 @@ ai_last_analyzed:
 ## AI 분석 요약 (AI)
 
 
-## 연결된 책 (AI)
+## 연결된 콘텐츠 (AI)
 

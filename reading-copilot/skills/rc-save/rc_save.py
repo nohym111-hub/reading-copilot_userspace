@@ -209,13 +209,8 @@ def find_book_file(vault: Path, book_title: str) -> Path | None:
 def update_note(note_path: Path, entries: list[str], n_quotes: int) -> None:
     content = note_path.read_text(encoding="utf-8")
 
-    # highlights_count 증가
-    def inc(m):
-        return f"highlights_count: {int(m.group(1)) + n_quotes}"
-    content = re.sub(r"highlights_count:\s*(\d+)", inc, content)
-
-    # status: to-read → reading
-    content = re.sub(r'(status:\s*)"?to-read"?', r"\1reading", content)
+    # status: interested → explored
+    content = re.sub(r'(status:\s*)"?interested"?', r'\1"explored"', content)
 
     # 섹션 없으면 파일 끝에 생성
     if SECTION_HEADER not in content:

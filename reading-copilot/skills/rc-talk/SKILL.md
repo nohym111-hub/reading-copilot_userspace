@@ -95,7 +95,7 @@ rc_talk 응답:
 
 → 답하면 user_rating 저장
 → 무시하면 그냥 넘어감 (강요하지 않음)
-→ status: done 전환
+→ status: explored 전환
 → rc_ontology에 Book-level + User-level 트리거
 ```
 

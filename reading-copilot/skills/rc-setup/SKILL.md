@@ -115,7 +115,7 @@ git_remote: "{git_remote}"     # rc-git-push 전용. 비워두면 git 푸시 비
 
 새 세션이 시작될 때:
 1. Ontology/profile.md 로드 → 현재 관심사·읽는 책 파악
-2. Books/ 폴더에서 status: reading인 파일 확인
+2. Books/ 폴더에서 status: explored인 파일 확인
 3. 마지막 수정일 확인 → 2일+ 경과 시 rc_talk Remind 모드 실행
 4. 이후 사용자 입력을 rc로 처리
 
