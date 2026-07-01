@@ -10,17 +10,20 @@ _모든 Claude 세션에서 자동으로 로드되는 마스터 컨텍스트_
 
 ```yaml
 vault_root: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/reading-copilot_Claude/reading-copilot-vault"   # 데이터 Vault (Books/Ontology)
-books_dir: "Books/"            # vault_root 기준 상대경로
-ontology_dir: "Ontology/"      # vault_root 기준 상대경로
+books_dir: "Books"             # vault_root 기준 상대경로 (후행 슬래시 없음)
+ontology_dir: "Ontology"       # vault_root 기준 상대경로 (후행 슬래시 없음)
 skills_root: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/reading-copilot_Claude/reading-copilot"   # 스킬 소스 경로
-skills_dir: "skills/"          # skills_root 기준 상대경로 — 각 스킬은 {skills_root}/{skills_dir}<name>/SKILL.md
+skills_dir: "skills"           # skills_root 기준 상대경로 — 각 스킬은 {skills_root}/{skills_dir}/<name>/SKILL.md
 file_access: "obsidian-mcp"    # 또는 "filesystem" — 1순위 파일 접근 방식
+obsidian_mcp_prefix: "reading-copilot-vault"   # obsidian-mcp 경로 프리픽스. MCP vault root가 vault_root의 상위 폴더일 때 설정. 동일하면 빈 문자열
 script_path: "/Users/sojung.noh/Library/Mobile Documents/iCloud~md~obsidian/Documents/reading-copilot_Claude/reading-copilot/skills/rc-save/rc_save.py"   # rc-save v3: OCR JSON → Obsidian 저장 스크립트
 git_remote: "https://github.com/nohym111-hub/reading-copilot_Claude"   # rc-git-push 전용. 비워두면 git 푸시 비활성
 ```
 
 규칙:
 - 데이터(Books/Ontology) 경로는 절대경로를 하드코딩하지 않는다. 항상 `vault_root` + 상대경로를 조합한다.
+- `file_access: obsidian-mcp` 호출 시 경로 = `{obsidian_mcp_prefix}/{books_dir 또는 ontology_dir}`. 후행 슬래시 절대 금지.
+  - 예) dirpath: `reading-copilot-vault/Books` ✅ / `Books/` ❌
 - 스킬 소스 경로는 `skills_root`(절대경로) + `skills_dir`로 조합한다. 스킬 소스는 데이터 Vault 밖의 별도 plugin repo(RC_claude)에 있으며, 실제 실행 스킬은 거기서 패키징되어 Claude Code 플러그인으로 로드된다.
 - 이 블록이 없거나 `vault_root`가 비어있으면 → rc 스킬은 **rc-setup 실행을 안내**하고 즉시 중단한다.
 
@@ -31,8 +34,10 @@ git_remote: "https://github.com/nohym111-hub/reading-copilot_Claude"   # rc-git-
 ## 저장소 구조 (Configuration 블록의 값을 적용)
 - **Vault 루트**: 위 Configuration의 `vault_root`. 로컬 Obsidian Vault이며 iCloud로 동기화된다 (모바일·웹·데스크탑 공통).
 - **`{vault_root}/{books_dir}`**: 책 1권 = 파일 1개. 모든 Human + AI 데이터 누적
-- **`{vault_root}/{ontology_dir}/themes.md`**: 전체 테마 사전 (AI 자동 관리)
-- **`{vault_root}/{ontology_dir}/profile.md`**: 사용자 관심사 그래프 (AI 자동 관리)
+- **`{vault_root}/{ontology_dir}/`**: LLM Wiki 온톨로지 (AI 자동 관리, Karpathy 위키 모델)
+  - `methodology.md`: 명명·점수·갱신·고아 규칙 (헌법) / `index.md`: 엔티티 레지스트리 / `README.md`: 철학
+  - `profile.md`: 독자 관점(관심사·공백) / `Concepts/*.md`: 개념 노드(개별 파일) / `people.md`·`claims.md`: 2차 참조
+  - Work 노드 = Books/의 노트 자체. 책 프론트매터 `ai_*`가 `"[[위키링크]]"`로 위키에 연결된다.
 - **`{skills_root}/{skills_dir}<name>/SKILL.md`**: 스킬 소스 파일 (rc, rc_register, rc_save, rc_talk, rc_ontology, rc_git_push, rc_setup). 데이터 Vault가 아닌 별도 plugin repo(RC_claude)에 있다 — 스킬을 수정할 때는 이 경로에서 편집한다.
 - `file_access: obsidian-mcp` 일 때 파일 접근은 **Obsidian MCP (`mcp-obsidian`)**를 1순위로 사용한다
   (`obsidian_list_files_in_dir`, `obsidian_get_file_contents`, `obsidian_batch_get_file_contents`,

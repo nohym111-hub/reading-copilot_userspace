@@ -68,6 +68,8 @@ rc_ontology가 관심사 이동 또는 지식 공백을 감지했을 때.
   - 컨텍스트 로드: `obsidian_get_file_contents` / `obsidian_batch_get_file_contents`
   - 최근 수정 확인: `obsidian_get_recent_changes`
   - 섹션 추가: `obsidian_patch_content` (heading anchor: "대화 기록", "AI 분석 요약")
+  - **경로 규칙**: filepath = `{obsidian_mcp_prefix}/{books_dir}/{제목}.md` (후행 슬래시 금지)
+    - 예) `filepath: "reading-copilot-vault/Books/도둑맞은 집중력.md"`
 - Configuration이 없으면 → "rc-setup을 먼저 실행해주세요" 한 줄 안내 후 중단.
 
 ## 동작 흐름

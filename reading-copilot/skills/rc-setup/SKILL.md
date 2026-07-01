@@ -39,9 +39,14 @@ bash 또는 파일 도구로 다음을 생성한다:
 ```
 {vault_root}/
 ├ Books/                    # 빈 폴더
-├ Ontology/
-│  ├ themes.md              # 빈 시드
-│  └ profile.md             # 빈 시드
+├ Ontology/                 # LLM Wiki 온톨로지 (Karpathy 위키 모델)
+│  ├ README.md              # 철학
+│  ├ methodology.md         # 명명·점수·갱신·고아 규칙 (헌법)
+│  ├ index.md               # 엔티티 레지스트리
+│  ├ profile.md             # 독자 레이어 시드
+│  ├ people.md              # 인물 (빈 시드)
+│  ├ claims.md              # 주장 (빈 시드)
+│  └ Concepts/              # 개념 노드 폴더 (빈)
 ├ Skills/                   # 사용자 참고용 (선택)
 └ CLAUDE.md                 # Configuration 포함된 마스터 컨텍스트
 ```
@@ -64,10 +69,11 @@ _모든 Claude 세션에서 자동으로 로드되는 마스터 컨텍스트_
 
 ```yaml
 vault_root: "{vault_root}"
-books_dir: "Books/"            # vault_root 기준 상대경로
-ontology_dir: "Ontology/"      # vault_root 기준 상대경로
-skills_dir: "Skills/"          # 사용자 참고용. 실제 스킬은 플러그인이 제공
+books_dir: "Books"             # vault_root 기준 상대경로 (후행 슬래시 없음)
+ontology_dir: "Ontology"       # vault_root 기준 상대경로 (후행 슬래시 없음)
+skills_dir: "Skills"           # 사용자 참고용. 실제 스킬은 플러그인이 제공
 file_access: "{file_access}"   # obsidian-mcp | filesystem — 1순위 파일 접근 방식
+obsidian_mcp_prefix: "{vault_folder_name}"   # obsidian-mcp 경로 프리픽스. MCP root가 vault 상위면 설정, 같으면 빈 문자열
 git_remote: "{git_remote}"     # rc-git-push 전용. 비워두면 git 푸시 비활성
 ```
 
@@ -82,8 +88,7 @@ git_remote: "{git_remote}"     # rc-git-push 전용. 비워두면 git 푸시 비
 ## 저장소 구조 (Configuration 블록의 값을 적용)
 - **Vault 루트**: 위 Configuration의 `vault_root`. 로컬 Obsidian Vault. 클라우드(iCloud/Drive 등) 위에 두면 기기 간 자동 동기화.
 - **`{vault_root}/{books_dir}`**: 책 1권 = 파일 1개. 모든 Human + AI 데이터 누적
-- **`{vault_root}/{ontology_dir}/themes.md`**: 전체 테마 사전 (AI 자동 관리)
-- **`{vault_root}/{ontology_dir}/profile.md`**: 사용자 관심사 그래프 (AI 자동 관리)
+- **`{vault_root}/{ontology_dir}/`**: LLM Wiki 온톨로지 (AI 자동 관리) — methodology(규칙)·index(레지스트리)·profile(독자 레이어)·Concepts/(개념 노드). Work 노드는 Books 노트 자체.
 - **`{vault_root}/{skills_dir}`**: (선택) 스킬 원본 참고 사본. 실제 실행 스킬은 Claude Code 플러그인에서 로드됨
 - `file_access: obsidian-mcp` 일 때 파일 접근은 **Obsidian MCP (`mcp-obsidian`)**를 1순위로 사용한다
   (`obsidian_list_files_in_dir`, `obsidian_get_file_contents`, `obsidian_batch_get_file_contents`,
@@ -128,39 +133,34 @@ git_remote: "{git_remote}"     # rc-git-push 전용. 비워두면 git 푸시 비
 | Human+AI | 대화 | 대화 기록 섹션 | 사용자 발화만 |
 ```
 
-### 단계 5 — Ontology 시드 파일 생성
+### 단계 5 — Ontology 시드 파일 생성 (LLM Wiki 모델)
 
-`{vault_root}/Ontology/themes.md`:
+`{vault_root}/Ontology/Concepts/` 폴더를 만들고, 아래 시드 파일들을 생성한다. 개념 노드는 첫 책부터 rc_ontology가 동적으로 채운다.
+
+`{vault_root}/Ontology/methodology.md` (규칙 헌법 — 핵심만):
 ```markdown
-# Themes — 전체 테마 사전
-_AI 자동 관리. 사용자는 검색·확인만, 직접 편집은 권장하지 않음._
-
-## 노드 종류
-- **핵심 노드**: 책 1권에서 키워드 3회 이상 등장
-- **고관심 노드**: 감정 표현이 동반된 하이라이트
-- **탐색 노드**: 대화에서 반복된 질문·주제
-- **연결 노드**: 2권 이상에서 공통으로 등장한 개념
-
-## 노드 목록
-_(첫 책을 등록하면 rc_ontology가 자동으로 채우기 시작합니다)_
+# Ontology 규칙집 (Methodology)
+## 1. 엔티티 & 파일 표준
+- Work = Books/{제목}.md (노트 자체) / Concept = Ontology/Concepts/{개념명}.md (개별 파일) / Person·Claim = people.md·claims.md 섹션
+- 위키링크 타깃 = 파일명과 정확히 일치. 책 ai_* 필드는 "[[위키링크]]" 형식.
+- 책 ai_* 스키마: ai_entity_type / ai_concepts / ai_connected_works / ai_cross_themes / ai_interest_score / ai_summary / ai_last_analyzed
+## 2. 독자 레이어 = profile.md (관심사·공백)
+## 3. interest_score = min(1.0, 0.04·H + 0.06·E + 0.20·D)  (H=하이라이트수, E=감정마킹, D=서사깊이 0/1/2)
+## 4. 하이라이트 갱신: 증분·멱등, 양방향 연결, Human 불가침
+## 5. 고아 금지: Concept은 2 Work+ 또는 2 Concept 연결 시에만 파일 생성. 데이터 없는 스텁은 score 0.10, 개념 생성 금지(환각 방지).
 ```
 
-`{vault_root}/Ontology/profile.md`:
+`{vault_root}/Ontology/profile.md` (독자 레이어 시드):
 ```markdown
-# Profile — 사용자 관심사 그래프
-_AI 자동 관리. rc_ontology가 갱신함._
-
-## 현재 관심사
-_(아직 분석 가능한 데이터가 없습니다. 책 한 권을 등록하고 하이라이트 5개를 저장하면 첫 분석이 실행됩니다.)_
-
-## 최근 읽기 패턴
-- 읽는 중: 0권
-- 완독: 0권
-- 마지막 활동: -
-
-## 관심 공백 영역
-_(분석 결과가 누적되면 여기 표시됩니다.)_
+# 독자 프로파일 (Reader Layer)
+_AI 자동 관리. rc_ontology가 갱신._
+## 관심사 그래프
+_(책과 하이라이트가 쌓이면 채워집니다.)_
+## 탐색 공백
+## 시간축 변화
 ```
+
+`{vault_root}/Ontology/index.md`, `README.md`, `people.md`, `claims.md`는 헤더만 있는 빈 시드로 생성한다(rc_ontology가 채움).
 
 ### 단계 6 — 완료 보고 + Obsidian MCP 설정 안내문
 
@@ -173,8 +173,9 @@ _(분석 결과가 누적되면 여기 표시됩니다.)_
 생성된 파일:
 - {vault_root}/CLAUDE.md
 - {vault_root}/Books/
-- {vault_root}/Ontology/themes.md
+- {vault_root}/Ontology/methodology.md
 - {vault_root}/Ontology/profile.md
+- {vault_root}/Ontology/Concepts/
 
 📌 다음 단계 — Obsidian MCP 연결 (1회만)
 1. Obsidian을 설치하고, {vault_root}를 Vault로 추가합니다.
@@ -207,8 +208,9 @@ _(분석 결과가 누적되면 여기 표시됩니다.)_
 생성된 파일:
 - {vault_root}/CLAUDE.md
 - {vault_root}/Books/
-- {vault_root}/Ontology/themes.md
+- {vault_root}/Ontology/methodology.md
 - {vault_root}/Ontology/profile.md
+- {vault_root}/Ontology/Concepts/
 
 📌 파일 접근
 Obsidian 없이 파일 시스템으로 직접 동작합니다. 추가 설정 불필요.

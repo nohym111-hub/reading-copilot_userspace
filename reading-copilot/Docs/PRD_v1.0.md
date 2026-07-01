@@ -107,6 +107,11 @@ Reading Copilot_claude/
 
 ### 3.2 Ontology 파일 구조 예시
 
+> ⚠️ **모델 갱신 안내 (2026-06-25):** 온톨로지는 이후 **LLM Wiki(Karpathy) 모델**로 전환되었다.
+> `themes.md`(테마 사전)는 개별 `Concepts/*.md` 노드로, 관심사 그래프는 `profile.md`(독자 레이어)로 분화되었고,
+> 책 `ai_*` 필드는 `"[[위키링크]]"` 형식으로 표준화되었다. **현행 규칙의 단일 기준은 `Ontology/methodology.md`다.**
+> 아래 §3.2~3.3의 스키마는 히스토리(v1.0 원안)로 보존한다.
+
 **themes.md** — 파일 1개, 테마가 늘어날수록 섹션이 추가된다.
 
 ```markdown

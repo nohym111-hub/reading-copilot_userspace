@@ -12,12 +12,17 @@ status: "explored"
 started: 2026-05-20
 finished:
 user_rating:
-ai_ontology_nodes: []
-ai_interest_score:
-ai_connected: []
-ai_cross_themes: []
-ai_summary:
-ai_last_analyzed:
+ai_entity_type: Work
+ai_concepts:
+  - "[[서열 권력]]"
+  - "[[지위재]]"
+ai_connected_works:
+  - "[[Devil Wears Prada 2]]"
+ai_cross_themes:
+  - "[[지위재]]"
+ai_interest_score: 0.68
+ai_summary: "어퍼이스트사이드 엄마들의 서열·지위재 욕망을 영장류학 렌즈로 관찰한 회고록."
+ai_last_analyzed: 2026-06-25
 ---
 
 ## 한줄 인상 (Human)
@@ -70,4 +75,3 @@ ai_last_analyzed:
 
 
 ## 연결된 콘텐츠 (AI)
-

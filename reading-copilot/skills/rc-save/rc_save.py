@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-rc_save.py — Reading Copilot 하이라이트 저장 스크립트 v2
+rc_save.py — Reading Copilot 하이라이트 저장 스크립트 v3
 (Claude OCR JSON → Markdown 변환 → Obsidian 저장)
 
 사용법:
@@ -8,7 +8,11 @@ rc_save.py — Reading Copilot 하이라이트 저장 스크립트 v2
     python rc_save.py --book "책 제목" --vault "/path/to/vault" < ocr_result.json
 
 Claude가 출력한 JSON을 stdin으로 받아서 처리한다.
-Claude는 OCR + 마킹 감지만 하고, 이 스크립트가 포맷·저장·검증을 담당한다.
+Claude는 OCR + 마킹 감지만 하고, 이 스크립트가 포맷·저장·중복제거·검증을 담당한다.
+
+quote에 "timestamp" 필드가 있으면 앱 스크린샷(Mode B)으로 처리:
+  - 저장 포맷: > — TIMESTAMP | TODAY
+  - 기저장 중복은 timestamp 또는 highlighted 앞 40자 지문으로 판별
 """
 
 from __future__ import annotations
@@ -26,9 +30,9 @@ from pathlib import Path
 BOOKS_DIR      = "Books"
 SECTION_HEADER = "## 하이라이트 & 메모 (Human)"
 SENTENCE_END   = re.compile(r'[.?!」"\'。]\s*$')
-# 한국어 문장 종결: 한글 뒤 "다"로 끝나는 패턴 (이다/하다/었다/있다 등 포괄)
-# 또는 "요"·"죠"·"나"·"군"으로 끝나는 구어체 종결형
 KO_SENTENCE_END = re.compile(r'[가-힣]다\s*$|[가-힣][요죠나군]\s*$')
+DEDUP_FP_LEN   = 40  # 텍스트 지문 길이
+TS_PATTERN     = re.compile(r'> — (\d{4}\.\d{2}\.\d{2} \d{2}:\d{2})')
 
 
 # ── 유틸 ──────────────────────────────────────────────────────────────────────
@@ -139,7 +143,9 @@ def flatten_and_merge(pages: list[dict]) -> list[dict]:
 
             if is_last and has_next:
                 nq_list = pages[i + 1].get("quotes", [])
-                if nq_list and should_merge(q.get("highlighted", ""), nq_list[0].get("highlighted", "")):
+                # Mode B 항목(timestamp 키 존재)은 앱의 독립 하이라이트 — 병합 금지
+                is_mode_b = "timestamp" in q or (nq_list and "timestamp" in nq_list[0])
+                if not is_mode_b and nq_list and should_merge(q.get("highlighted", ""), nq_list[0].get("highlighted", "")):
                     final.append(merge_two(q, nq_list[0], pd.get("page"), pages[i + 1].get("page")))
                     pages[i + 1]["quotes"] = nq_list[1:]
                     continue
@@ -155,15 +161,16 @@ def format_quote(q: dict, today: str) -> str:
     """
     quote dict → Obsidian 저장 포맷
 
-    > "before **highlighted** after"
-    > — p.XX | YYYY-MM-DD
-    메모: ...
+    Mode A (페이지 있음):  > — p.XX | YYYY-MM-DD
+    Mode B (timestamp):   > — 2025.09.09 08:56 | YYYY-MM-DD
+    둘 다 없음:           > — YYYY-MM-DD
     """
     highlighted = q.get("highlighted", "").strip()
     before      = q.get("before", "").strip()
     after       = q.get("after", "").strip()
     memo        = q.get("memo", "").strip()
     page        = q.get("page")
+    timestamp   = q.get("timestamp", "").strip()
 
     parts = []
     if before:
@@ -172,10 +179,16 @@ def format_quote(q: dict, today: str) -> str:
     if after:
         parts.append(after)
 
-    body     = " ".join(parts)
-    page_str = f"p.{page}" if page else "p.?"
+    body = " ".join(parts)
 
-    lines = [f'> "{body}"', f"> — {page_str} | {today}"]
+    if page:
+        meta = f"p.{page} | {today}"
+    elif timestamp:
+        meta = f"{timestamp} | {today}"
+    else:
+        meta = today
+
+    lines = [f'> "{body}"', f"> — {meta}"]
     if memo:
         lines.append(f"메모: {memo}")
 
@@ -235,6 +248,45 @@ def verify(note_path: Path, entries: list[str]) -> list[str]:
     ]
 
 
+# ── 중복 제거 ──────────────────────────────────────────────────────────────────
+
+def _quote_fp(q: dict) -> str:
+    """타임스탬프 우선, 없으면 highlighted 앞 N자 지문."""
+    ts = q.get("timestamp", "").strip()
+    if ts:
+        return f"ts:{ts}"
+    return q.get("highlighted", "")[:DEDUP_FP_LEN].strip()
+
+
+def extract_existing_fps(note_path: Path) -> set[str]:
+    """노트 파일에서 기저장 항목의 지문 집합 추출."""
+    content = note_path.read_text(encoding="utf-8")
+    fps: set[str] = set()
+    for m in TS_PATTERN.finditer(content):
+        fps.add(f"ts:{m.group(1)}")
+    for m in re.finditer(r'\*\*(.{10,}?)\*\*', content):
+        fp = m.group(1)[:DEDUP_FP_LEN].strip()
+        if fp:
+            fps.add(fp)
+    return fps
+
+
+def dedup_quotes(quotes: list[dict], existing_fps: set[str]) -> tuple[list[dict], int]:
+    """기저장 지문과 배치 내 중복을 제거한다. (신규 항목, 건너뜀 수) 반환."""
+    seen = set(existing_fps)
+    result: list[dict] = []
+    skipped = 0
+    for q in quotes:
+        fp = _quote_fp(q)
+        if fp and fp in seen:
+            skipped += 1
+        else:
+            if fp:
+                seen.add(fp)
+            result.append(q)
+    return result, skipped
+
+
 # ── 메인 ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -263,10 +315,15 @@ def main():
     if not note_path:
         sys.exit(1)
 
-    final_quotes = flatten_and_merge(pages)
+    flat_quotes  = flatten_and_merge(pages)
+
+    existing_fps             = extract_existing_fps(note_path)
+    final_quotes, skipped    = dedup_quotes(flat_quotes, existing_fps)
+    if skipped:
+        print(f"ℹ 중복 {skipped}개 건너뜀 (기저장 or 이미지 간 중복)", file=sys.stderr)
 
     if not final_quotes:
-        print("ℹ 저장할 하이라이트가 없어요.")
+        print("ℹ 저장할 새 하이라이트가 없어요 (모두 이미 저장된 항목).")
         sys.exit(0)
 
     entries = [format_quote(q, today) for q in final_quotes]
@@ -287,7 +344,8 @@ def main():
         except OSError:
             pass
 
-    print(f"✓ {total_images}장 처리 완료 | 하이라이트 {len(entries)}개 저장 | {note_path.stem}")
+    skipped_note = f" (중복 {skipped}개 건너뜀)" if skipped else ""
+    print(f"✓ {total_images}장 처리 완료 | 하이라이트 {len(entries)}개 저장{skipped_note} | {note_path.stem}")
 
 
 if __name__ == "__main__":
