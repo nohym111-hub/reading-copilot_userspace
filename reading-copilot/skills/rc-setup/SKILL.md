@@ -41,7 +41,6 @@ bash 또는 파일 도구로 다음을 생성한다:
 ├ Books/                    # 빈 폴더
 ├ Ontology/                 # LLM Wiki 온톨로지 (Karpathy 위키 모델)
 │  ├ README.md              # 철학
-│  ├ methodology.md         # 명명·점수·갱신·고아 규칙 (헌법)
 │  ├ index.md               # 엔티티 레지스트리
 │  ├ profile.md             # 독자 레이어 시드
 │  ├ people.md              # 인물 (빈 시드)
@@ -88,7 +87,7 @@ git_remote: "{git_remote}"     # rc-git-push 전용. 비워두면 git 푸시 비
 ## 저장소 구조 (Configuration 블록의 값을 적용)
 - **Vault 루트**: 위 Configuration의 `vault_root`. 로컬 Obsidian Vault. 클라우드(iCloud/Drive 등) 위에 두면 기기 간 자동 동기화.
 - **`{vault_root}/{books_dir}`**: 책 1권 = 파일 1개. 모든 Human + AI 데이터 누적
-- **`{vault_root}/{ontology_dir}/`**: LLM Wiki 온톨로지 (AI 자동 관리) — methodology(규칙)·index(레지스트리)·profile(독자 레이어)·Concepts/(개념 노드). Work 노드는 Books 노트 자체.
+- **`{vault_root}/{ontology_dir}/`**: LLM Wiki 온톨로지 (AI 자동 관리) — index(레지스트리)·profile(독자 레이어)·Concepts/(개념 노드). Work 노드는 Books 노트 자체. 생성·갱신 규칙은 rc_ontology 스킬 보유.
 - **`{vault_root}/{skills_dir}`**: (선택) 스킬 원본 참고 사본. 실제 실행 스킬은 Claude Code 플러그인에서 로드됨
 - `file_access: obsidian-mcp` 일 때 파일 접근은 **Obsidian MCP (`mcp-obsidian`)**를 1순위로 사용한다
   (`obsidian_list_files_in_dir`, `obsidian_get_file_contents`, `obsidian_batch_get_file_contents`,
@@ -135,20 +134,7 @@ git_remote: "{git_remote}"     # rc-git-push 전용. 비워두면 git 푸시 비
 
 ### 단계 5 — Ontology 시드 파일 생성 (LLM Wiki 모델)
 
-`{vault_root}/Ontology/Concepts/` 폴더를 만들고, 아래 시드 파일들을 생성한다. 개념 노드는 첫 책부터 rc_ontology가 동적으로 채운다.
-
-`{vault_root}/Ontology/methodology.md` (규칙 헌법 — 핵심만):
-```markdown
-# Ontology 규칙집 (Methodology)
-## 1. 엔티티 & 파일 표준
-- Work = Books/{제목}.md (노트 자체) / Concept = Ontology/Concepts/{개념명}.md (개별 파일) / Person·Claim = people.md·claims.md 섹션
-- 위키링크 타깃 = 파일명과 정확히 일치. 책 ai_* 필드는 "[[위키링크]]" 형식.
-- 책 ai_* 스키마: ai_entity_type / ai_concepts / ai_connected_works / ai_cross_themes / ai_interest_score / ai_summary / ai_last_analyzed
-## 2. 독자 레이어 = profile.md (관심사·공백)
-## 3. interest_score = min(1.0, 0.04·H + 0.06·E + 0.20·D)  (H=하이라이트수, E=감정마킹, D=서사깊이 0/1/2)
-## 4. 하이라이트 갱신: 증분·멱등, 양방향 연결, Human 불가침
-## 5. 고아 금지: Concept은 2 Work+ 또는 2 Concept 연결 시에만 파일 생성. 데이터 없는 스텁은 score 0.10, 개념 생성 금지(환각 방지).
-```
+`{vault_root}/Ontology/Concepts/` 폴더를 만들고, 아래 시드 파일들을 생성한다. 개념 노드 생성·규칙 적용은 첫 책부터 rc_ontology가 담당한다. **온톨로지 규칙(명명·점수·갱신·고아)은 rc_ontology 스킬이 단일 보유하며, Vault엔 규칙 사본을 두지 않는다.**
 
 `{vault_root}/Ontology/profile.md` (독자 레이어 시드):
 ```markdown
@@ -173,7 +159,6 @@ _(책과 하이라이트가 쌓이면 채워집니다.)_
 생성된 파일:
 - {vault_root}/CLAUDE.md
 - {vault_root}/Books/
-- {vault_root}/Ontology/methodology.md
 - {vault_root}/Ontology/profile.md
 - {vault_root}/Ontology/Concepts/
 
@@ -208,7 +193,6 @@ _(책과 하이라이트가 쌓이면 채워집니다.)_
 생성된 파일:
 - {vault_root}/CLAUDE.md
 - {vault_root}/Books/
-- {vault_root}/Ontology/methodology.md
 - {vault_root}/Ontology/profile.md
 - {vault_root}/Ontology/Concepts/
 

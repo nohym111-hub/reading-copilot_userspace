@@ -35,7 +35,7 @@ git_remote: "https://github.com/nohym111-hub/reading-copilot_Claude"   # rc-git-
 - **Vault 루트**: 위 Configuration의 `vault_root`. 로컬 Obsidian Vault이며 iCloud로 동기화된다 (모바일·웹·데스크탑 공통).
 - **`{vault_root}/{books_dir}`**: 책 1권 = 파일 1개. 모든 Human + AI 데이터 누적
 - **`{vault_root}/{ontology_dir}/`**: LLM Wiki 온톨로지 (AI 자동 관리, Karpathy 위키 모델)
-  - `methodology.md`: 명명·점수·갱신·고아 규칙 (헌법) / `index.md`: 엔티티 레지스트리 / `README.md`: 철학
+  - `index.md`: 엔티티 레지스트리 / `README.md`: 철학  _(온톨로지 생성·갱신 규칙은 Vault가 아니라 rc_ontology 스킬이 보유)_
   - `profile.md`: 독자 관점(관심사·공백) / `Concepts/*.md`: 개념 노드(개별 파일) / `people.md`·`claims.md`: 2차 참조
   - Work 노드 = Books/의 노트 자체. 책 프론트매터 `ai_*`가 `"[[위키링크]]"`로 위키에 연결된다.
 - **`{skills_root}/{skills_dir}<name>/SKILL.md`**: 스킬 소스 파일 (rc, rc_register, rc_save, rc_talk, rc_ontology, rc_git_push, rc_setup). 데이터 Vault가 아닌 별도 plugin repo(RC_claude)에 있다 — 스킬을 수정할 때는 이 경로에서 편집한다.

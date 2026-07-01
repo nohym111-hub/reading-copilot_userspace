@@ -91,5 +91,5 @@ ai_last_analyzed:
 ## 주의
 - LAYER 1·2 (ai_ 없는 필드)는 사실 기반이다. 임의로 채우지 않는다.
 - LAYER 3 (ai_ 접두사)는 rc_ontology가 채운다. 이 스킬은 빈 상태로 남긴다.
-  - 스키마 표준은 `{ontology_dir}/methodology.md` §1.3 참조. ai_concepts·ai_connected_works·ai_cross_themes 는 `"[[위키링크]]"` 형식이며 rc_ontology만 채운다.
+  - 스키마 표준은 rc_ontology 스킬 참조. ai_concepts·ai_connected_works·ai_cross_themes 는 `"[[위키링크]]"` 형식이며 rc_ontology만 채운다.
 - 권장 모델: Claude Sonnet (서지 정보 추론·온톨로지 매핑)

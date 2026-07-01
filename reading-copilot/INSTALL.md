@@ -98,7 +98,7 @@ rc-setup은 `AskUserQuestion`으로 다음을 묻는다:
 rc-setup이 자율 실행한다:
 - Vault 폴더 구조 생성: `Books/`, `Ontology/` (스킬 소스는 별도 plugin repo `RC_claude`에 있으므로 Vault에 `Skills/`를 만들지 않는다)
 - `CLAUDE.md` 작성 — Configuration 블록에 사용자 응답 채움
-- `Ontology/methodology.md`, `Ontology/profile.md`, `Ontology/Concepts/` 등 LLM Wiki 시드 작성
+- `Ontology/README.md`, `Ontology/profile.md`, `Ontology/Concepts/` 등 LLM Wiki 시드 작성
 
 ### Step 4 — Obsidian MCP 안내 (선택)
 `obsidian-mcp`를 택한 경우, rc-setup이 1회용 설치 가이드를 출력:
