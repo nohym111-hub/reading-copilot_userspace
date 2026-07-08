@@ -27,7 +27,7 @@ from pathlib import Path
 
 # ── 상수 ─────────────────────────────────────────────────────────────────────
 
-BOOKS_DIR      = "Books"
+BOOKS_DIR      = "Contents"  # CLAUDE.md Configuration의 books_dir 기본값 (--books-dir로 override)
 SECTION_HEADER = "## 하이라이트 & 메모 (Human)"
 SENTENCE_END   = re.compile(r'[.?!」"\'。]\s*$')
 KO_SENTENCE_END = re.compile(r'[가-힣]다\s*$|[가-힣][요죠나군]\s*$')
@@ -197,10 +197,10 @@ def format_quote(q: dict, today: str) -> str:
 
 # ── Obsidian 노트 업데이트 ────────────────────────────────────────────────────
 
-def find_book_file(vault: Path, book_title: str) -> Path | None:
-    books_dir = vault / BOOKS_DIR
+def find_book_file(vault: Path, book_title: str, books_dir_name: str = BOOKS_DIR) -> Path | None:
+    books_dir = vault / books_dir_name
     if not books_dir.exists():
-        print(f"❌ Books 폴더 없음: {books_dir}", file=sys.stderr)
+        print(f"❌ {books_dir_name} 폴더 없음: {books_dir}", file=sys.stderr)
         return None
 
     needle     = normalize(book_title)
@@ -294,6 +294,7 @@ def main():
     parser.add_argument("--book",  required=True, help="책 제목")
     parser.add_argument("--vault", required=True, help="Obsidian vault 루트 경로")
     parser.add_argument("--json-file", default=None, help="OCR JSON 파일 경로 (저장 후 자동 삭제)")
+    parser.add_argument("--books-dir", default=BOOKS_DIR, help="vault_root 기준 콘텐츠 폴더명 (CLAUDE.md의 books_dir 값)")
     args = parser.parse_args()
 
     vault = Path(args.vault).expanduser().resolve()
@@ -311,7 +312,7 @@ def main():
     pages        = parse_input(raw)
     total_images = len(pages)
 
-    note_path = find_book_file(vault, args.book)
+    note_path = find_book_file(vault, args.book, args.books_dir)
     if not note_path:
         sys.exit(1)
 

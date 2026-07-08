@@ -32,7 +32,7 @@ CLAUDE.md의 `## ⚙ Configuration` 블록에서 읽는다:
 ```yaml
 script_path: /path/to/skills/rc-save/rc_save.py
 vault_root:  /path/to/MyVault
-books_dir:   Books
+books_dir:   Contents
 ```
 Configuration이 없으면 → "rc-setup을 먼저 실행해주세요" 후 중단.
 
@@ -213,6 +213,7 @@ Mode C는 STEP 2 OCR을 건너뛰고 → **STEP 2C**로 직접 이동한다.
 python {script_path} \
   --book "{책 제목}" \
   --vault "{vault_root}" \
+  --books-dir "{books_dir}" \
   --json-file "/tmp/ocr_result.json"
 ```
 

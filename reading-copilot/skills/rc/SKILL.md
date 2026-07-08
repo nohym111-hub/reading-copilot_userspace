@@ -12,7 +12,7 @@ description: Reading Copilot의 메인 라우터. 사용자가 책 관련 입력
 ## 저장소 (Configuration 참조)
 - 경로·옵션은 **CLAUDE.md의 `## ⚙ Configuration` 블록**에서 읽는다. 절대경로를 이 파일에 하드코딩하지 않는다.
   - Vault 루트: `vault_root`
-  - Books 폴더: `{vault_root}/{books_dir}`
+  - Contents 폴더: `{vault_root}/{books_dir}`
   - Ontology 폴더: `{vault_root}/{ontology_dir}`
   - 파일 접근 방식: `file_access` (`obsidian-mcp` 1순위 / `filesystem` 폴백)
 - **Configuration 블록이 없거나 `vault_root`가 비어있으면** → 사용자에게 다음 한 줄만 응답하고 라우팅을 중단한다:
@@ -35,7 +35,7 @@ description: Reading Copilot의 메인 라우터. 사용자가 책 관련 입력
 ## 현재 읽는 책 특정 (다독 중)
 0. **이번 입력에 표지 이미지가 포함돼 있으면 → 그 표지에서 식별한 책이 대상이다 (아래 1~3 폴백보다 항상 우선).** 표지가 있는데도 '최근 수정 노트'로 빠지면 안 된다.
 1. 직전 대화에서 언급된 책
-2. 가장 최근에 하이라이트가 추가된 책 (Books/ 폴더에서 수정일 기준)
+2. 가장 최근에 하이라이트가 추가된 책 (Contents/ 폴더에서 수정일 기준)
 3. 판단 불가 시 → 현재 status: explored인 콘텐츠 목록을 보여주고 사용자가 선택
 
 ```

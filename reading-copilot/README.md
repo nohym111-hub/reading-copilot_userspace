@@ -6,15 +6,25 @@
 
 ---
 
+## 30초 시작하기
+
+```bash
+/plugin install <RC_claude 폴더 경로>
+```
+1. 위 명령으로 설치 후 Claude 재시작
+2. `rc 설치해줘` 전송 → Vault 저장 위치만 답하면 끝 (추가 설정 없음)
+3. 책 표지 사진 한 장 전송 → 첫 책이 자동 등록됩니다
+
+---
+
 ## 무엇을 할 수 있나
 
 - 📷 **책 표지 사진** → 책 자동 식별 + Obsidian Vault에 등록
 - ✍️ **본문 페이지 사진 / 텍스트** → 하이라이트로 즉시 저장 (OCR 포함)
 - 💬 **자연스러운 대화** → 책에 대한 질문, 추천, 정리 요약
 - 🧠 **온톨로지 자동 분석** → 하이라이트가 쌓이면 관심사 그래프·테마 사전을 자동 갱신
-- ☁️ **GitHub 백업 (선택)** → Vault 변경사항을 깃 스냅샷으로 푸시
 
-## 포함된 스킬 7종
+## 포함된 스킬 6종
 
 | 스킬 | 역할 |
 |---|---|
@@ -24,44 +34,18 @@
 | `rc-save` | 하이라이트·메모 즉시 저장 (이미지 OCR 포함) |
 | `rc-talk` | 대화·유도·요약·추천 |
 | `rc-ontology` | 지식 온톨로지 (테마/관심사 그래프) 자동 갱신 |
-| `rc-git-push` | Vault → GitHub 스냅샷 백업 (선택) |
 
 ## 사전 요구사항
 
-- **필수**: [Claude Code](https://claude.ai/code) (CLI / Desktop / IDE 어느 것이든)
-- **권장**: [Obsidian](https://obsidian.md) + "Local REST API" 커뮤니티 플러그인 + [`mcp-obsidian`](https://github.com/MarkusPfundstein/mcp-obsidian)
-  - 없어도 동작합니다 — 파일 시스템으로 직접 읽고 쓰는 폴백 모드 지원
-
-## 설치 (3단계)
-
-### 1. 패키지 받기
-이 폴더를 통째로 받습니다 (zip 또는 `git clone`).
-
-### 2. Claude Code 플러그인으로 설치
-```bash
-/plugin install <RC_claude 폴더 경로>
-```
-설치 후 Claude를 재시작하면 7개 스킬이 자동 로드됩니다.
-
-### 3. 첫 대화에서 초기화
-```
-rc 설치해줘
-```
-`rc-setup`이 자동 실행되어 다음을 묻습니다:
-- Vault를 어디에 둘지 (iCloud Obsidian / 로컬 / 직접 입력)
-- 파일 접근 방식 (`obsidian-mcp` 권장 / `filesystem` 폴백)
-- GitHub 백업 사용 여부 (선택)
-
-응답 후 Vault 폴더 구조와 `CLAUDE.md`(Configuration 블록 포함)가 자동 생성됩니다.
-
-### 4. 사용 시작
-책 표지 사진을 한 장 보내보세요. `rc`가 자동으로 `rc-register`를 호출해 첫 책을 등록합니다.
+- **필수**: [Claude Code](https://claude.ai/code) (CLI / Desktop / IDE 어느 것이든) — 이것만 있으면 바로 시작할 수 있습니다
+- **선택**: [Obsidian](https://obsidian.md) + "Local REST API" 커뮤니티 플러그인 + [`mcp-obsidian`](https://github.com/MarkusPfundstein/mcp-obsidian)
+  - 설치 시점에 필요하지 않습니다. 나중에 Obsidian에서 Vault를 직접 보고 싶어지면 그때 연결하면 됩니다.
 
 ## 동작 원리 (한 줄)
 
 스킬들은 **절대경로를 하드코딩하지 않습니다.** 모든 경로·옵션은 사용자 Vault의 `CLAUDE.md` 안 `## ⚙ Configuration` 블록 한 곳에서만 관리됩니다. Vault를 옮기고 싶으면 그 블록의 `vault_root` 값만 바꾸면 됩니다.
 
-자세한 설계 의도와 패키지 구조는 [`INSTALL.md`](./INSTALL.md), 서비스 사양은 [`Docs/PRD_v1.0.md`](./Docs/PRD_v1.0.md) 참고.
+패키지 내부 구조·설계 원칙·업그레이드 시나리오·개발자 배포 워크플로우는 [`DESIGN.md`](./DESIGN.md) 참고.
 
 ## 라이선스
 

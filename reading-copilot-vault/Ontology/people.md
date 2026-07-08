@@ -1,6 +1,6 @@
 # 인물 엔티티 (Person)
 _2차 참조. Person은 그래프 노드로 폭증시키지 않고 여기 섹션으로 모은다._
-_Work 노드는 여기 없다 → Books/의 노트 자체가 Work 노드다 (규칙: rc_ontology 스킬)._
+_Content 노드는 여기 없다 → Contents/의 노트 자체가 Content 노드다 (규칙: rc_ontology 스킬)._
 
 ---
 
